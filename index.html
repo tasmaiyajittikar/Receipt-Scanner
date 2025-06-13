@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Receipt Scanner</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { display: flex; flex-direction: column; gap: 20px; }
+        .upload-area { border: 2px dashed #ccc; padding: 20px; text-align: center; }
+        #preview { max-width: 100%; display: none; }
+        #results { margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Universal Receipt Scanner</h1>
+        
+        <div class="upload-area">
+            <h3>Upload Receipt Image</h3>
+            <input type="file" id="receiptUpload" accept="image/*">
+            <img id="preview" alt="Receipt preview">
+        </div>
+        
+        <button id="processBtn" disabled>Process Receipt</button>
+        <div id="processing" style="display:none; color: #0078d4; font-weight: bold; margin-top:10px;">
+            Processing receipt, please wait...
+        </div>
+        <div id="results" style="display:none;">
+            <h2>Extracted Data</h2>
+            <div id="storeInfo"></div>
+            <div id="dateInfo"></div>
+            <div id="totalInfo"></div>
+            <h3>Items Purchased</h3>
+            <table id="itemsTable">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script>
+        // Show/hide processing and results
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('processing').style.display = 'none';
+            // Enable process button if file is already selected (browser back/forward)
+            if (document.getElementById('receiptUpload').files.length > 0) {
+                document.getElementById('processBtn').disabled = false;
+            }
+        });
+
+        document.getElementById('processBtn').addEventListener('click', function() {
+            document.getElementById('processing').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        });
+
+        // This function will be called from app.js after processing is done
+        window.showResults = function() {
+            document.getElementById('processing').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+        };
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
